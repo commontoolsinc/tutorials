@@ -1,4 +1,8 @@
 ---
+export:
+  - format: pdf
+    template: plain_latex
+    article_type: Report
 title: Using the LLM built-in within a Recipe
 short_title: LLM built-in
 description: A tutorial on llm built-in
@@ -65,6 +69,7 @@ The [NAME] symbol is used as a property in the created charm. It is used for dis
 The [UI] property has all the information to render the charm in the browser. It contains a mix of JSX and interpolated function calls using `{some_function()}` syntax. The results of these functions are inserted into display for rendering. We'll learn more about what works in the UI property in future sections.
 
 When you deploy and browse to your charm, you should see something that looks like this:
+
 ![](./images/llmv1.png)
 **Figure**: Placeholder Recipe
 
@@ -134,6 +139,7 @@ Now that we've told `handler` what to expect as types, we can send the actual pa
 Our function body is just a single line (line 5). It simply sets the value of the `userMessage` cell to the user input. Cells have set() and get() functions. There are other functions which we'll discover in other chapters.
 
 After deploying your charm, you should see something like this:
+
 ![](./images/llm_handler.png)
 **Figure**: Recipe with Handler
 
@@ -187,7 +193,7 @@ Notice that we do not have to explicitly call the llm() function each time we ge
 This is handled for us by the reactive system we just talked about. Specifically, the `llm()` built-in will re-execute every time `userMessages` is updated. We can then use the variable `llmResponse` to view the response, which we'll do right now.
 
 We'll add a new section to the recipe [UI] to display the current value of the `llmResponse`. Luckily, this is very straightforward:
-```{code-block} typescript
+```{code-block} html
 :lable: llm_response
 :linenos: true
 :elphasize-lines:
@@ -197,18 +203,37 @@ We'll add a new section to the recipe [UI] to display the current value of the `
       {derive(llmResponse.result, (res) => res ? JSON.stringify(res) : "")}
     </div>
 ```
-`llmResponse` is typed as `Opaque<LLMBuiltInState>`. The important thing to know about this is that it has a `result?` property, which, not surprisingly, as the result of the llm call.
+`llmResponse` is typed as `Opaque<LLMBuiltInState>`. The important thing to know about this is that it has a `result?` property (the ? means its optional). This is where the result of the llm call is stored.
 Since `result` is optional, we need to call derive on it and check that it is defined.
 The result can be either a direct string or an array of parts. We call JSON.stringify() because
 this just makes it easier to do a bunch of work to display it. It won't be pretty, but you'll get
 content you're looking for.
 
 If you deploy and run it, you should be able to enter a message into the input form, then wait a few seconds and see a response from our friendly LLM. Here is what it looks like for me:
+
 ![](./images/llm_final.png)
 **Figure**: Final Recipe
 
 ## The Final Flow
 Et voilà ! Hopefully that worked for you. The full source code is listed at the end of this section.
+
+Here is the flow control at a high level.
+When the system first loads, it executes the body of the recipe() function, which creates the `userMessage` cell, and `llmResponse` which holds the result of calling `llm()`.
+
+Technically, the `llm()` built-in is called once with the undefined userMessage upon its initialization.
+
+The charm then renders the code in the [UI] section and the system sets the reactive node to display the llmResponse within the `derive(llmResponse.result)` and the user's message with `{userMessage}`.
+These initially don't show anything since the values are undefined.
+
+The user types a prompt into the `<common-send-message>` component which triggers the `textInputHandler()`. The handler gets passed in the event, which contains the user's message (as a normal js object), and also the `userMessage` which is a Cell. The handler sets the cell's value with the event message.
+
+The `userMessage` has been updated now and therefore kicks off the reactive system.
+The derive to show the `userMessage` is updated and we now see `User Message: {userMessage}`.
+The `llm()` built-in notices that its object has been updated and runs again.
+In a few seconds, it gets a response back from the LLM.
+This sets `llmResponse.result`, which triggers its `derive(llmResponse.result)`.
+And finally we see the `llmResponse: ...` in the [UI].
+
 There's a lot more to discover with the llm() function call (such as sending a list of user and agent messages for history or even tool use) and even more to learn about the Common Tools runtime system.
 
 
