@@ -33,6 +33,7 @@ import {
   derive,
   h,
   handler,
+  ifElse,
   llm,
   NAME,
   recipe,
@@ -200,14 +201,18 @@ We'll add a new section to the recipe [UI] to display the current value of the `
 :caption: Display llmResponse
     <div>
       llmResponse:
-      {derive(llmResponse.result, (res) => res ? JSON.stringify(res) : "")}
+      {llmResponse.result ? JSON.stringify(llmResponse.result) : ""}
     </div>
 ```
-`llmResponse` is typed as `Opaque<LLMBuiltInState>`. The important thing to know about this is that it has a `result?` property (the ? means its optional). This is where the result of the llm call is stored.
-Since `result` is optional, we need to call derive on it and check that it is defined.
+`llmResponse` is typed as `Opaque<LLMBuiltInState>`. The important thing to know about this is that it has a `result?` property (the ? means it is optional). This is where the result of the llm call is stored.
+Because `result` is optional, we guard with a ternary before stringifying so that we don't render `undefined` while the LLM is still working.
 The result can be either a direct string or an array of parts. We call JSON.stringify() because
 this just makes it easier to do a bunch of work to display it. It won't be pretty, but you'll get
 content you're looking for.
+
+:::{admonition} Advanced note
+The recipe transformer (enabled via `/// <cts-enable />`) rewrites that ternary expression into something like `{ifElse(llmResponse.result, derive(llmResponse.result, _v1 => JSON.stringify(_v1)), "")}`. You'll still need to import `ifElse` (even though you never call it yourself) alongside the existing `derive` import for the generated code to type-check.
+:::
 
 If you deploy and run it, you should be able to enter a message into the input form, then wait a few seconds and see a response from our friendly LLM. Here is what it looks like for me:
 
@@ -222,16 +227,16 @@ When the system first loads, it executes the body of the recipe() function, whic
 
 Technically, the `llm()` built-in is called once with the undefined userMessage upon its initialization.
 
-The charm then renders the code in the [UI] section and the system sets the reactive node to display the llmResponse within the `derive(llmResponse.result)` and the user's message with `{userMessage}`.
+The charm then renders the code in the [UI] section and the system sets the reactive node to display the llmResponse with the conditional expression we wrote (`{llmResponse.result ? ... : ""}`) and the user's message with `{userMessage}`.
 These initially don't show anything since the values are undefined.
 
 The user types a prompt into the `<common-send-message>` component which triggers the `textInputHandler()`. The handler gets passed in the event, which contains the user's message (as a normal js object), and also the `userMessage` which is a Cell. The handler sets the cell's value with the event message.
 
 The `userMessage` has been updated now and therefore kicks off the reactive system.
-The derive to show the `userMessage` is updated and we now see `User Message: {userMessage}`.
-The `llm()` built-in notices that its object has been updated and runs again.
+We re-render the portion of the UI that contains `User Message: {userMessage}` since the cell contained within the braces has changed.
+The `llm()` built-in notices that its object (the messages property) has been updated and runs again.
 In a few seconds, it gets a response back from the LLM.
-This sets `llmResponse.result`, which triggers its `derive(llmResponse.result)`.
+This sets `llmResponse.result`, which triggers the generated `ifElse(derive(...))` wrapper behind that conditional expression.
 And finally we see the `llmResponse: ...` in the [UI].
 
 There's a lot more to discover with the llm() function call (such as sending a list of user and agent messages for history or even tool use) and even more to learn about the Common Tools runtime system.
@@ -251,6 +256,7 @@ import {
   derive,
   h,
   handler,
+  ifElse,
   llm,
   NAME,
   recipe,
@@ -281,7 +287,7 @@ export default recipe("LLM Test", () => {
         <div>User Message: {userMessage}</div>
         <div>
           llmResponse:
-          {derive(llmResponse.result, (res) => res ? JSON.stringify(res) : "")}
+          {llmResponse.result ? JSON.stringify(llmResponse.result) : ""}
         </div>
         <div>
           <common-send-message
