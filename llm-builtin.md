@@ -40,7 +40,7 @@ import {
   UI,
 } from "commontools";
 ```
-Notice line 1 begins with `/// <cts-enable`. This line is important because it enables the Common Tools AST parser which allows you to use TypeScript types for many of the function parameters instead of passing in JSONSchema which can be quite verbose and difficult to read. We generally have this at the start of all recipes.
+Notice line 1 begins with `/// <cts-enable`, which is important because it enables the Common Tools AST Transformer. This allows you to use TypeScript types for many of the function parameters instead of passing in JSONSchema which can be quite verbose and difficult to read; it also enables automatic transformation of recipes you write to forms that use the reactive wrappers `derive` and `ifElse` without you having to write them yourself. We generally have this at the start of all recipes.
 
 The next step is to append our recipe function to the code, right after the imports. You can see `recipe` imported on line 32 in the code snippet above ([](#imports)). This is the main entry point for your recipe, you can think of it like *main()* in many languages.
 Normally, the recipe function takes in extra arguments, but for now, we'll leave it empty.
@@ -211,7 +211,7 @@ this just makes it easier to do a bunch of work to display it. It won't be prett
 content you're looking for.
 
 :::{admonition} Advanced note
-The recipe transformer (enabled via `/// <cts-enable />`) rewrites that ternary expression into something like `{ifElse(llmResponse.result, derive(llmResponse.result, _v1 => JSON.stringify(_v1)), "")}`. You'll still need to import `ifElse` (even though you never call it yourself) alongside the existing `derive` import for the generated code to type-check.
+The AST Transformer (enabled via `/// <cts-enable />`) rewrites that ternary expression into `{ifElse(llmResponse.result, derive(llmResponse.result, _v1 => JSON.stringify(_v1)), "")}`. You'll still need to import `ifElse` (even though you never call it yourself) alongside the existing `derive` import for the generated code to type-check.
 :::
 
 If you deploy and run it, you should be able to enter a message into the input form, then wait a few seconds and see a response from our friendly LLM. Here is what it looks like for me:
