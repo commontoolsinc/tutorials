@@ -1,8 +1,4 @@
 ---
-export:
-  - format: pdf
-    template: plain_latex
-    article_type: Report
 title: Using the LLM built-in within a Recipe
 short_title: LLM built-in
 description: A tutorial on llm built-in
