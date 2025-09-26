@@ -9,11 +9,11 @@ authors:
     email: ellyse@common.tools
 keywords: commontools, install
 abstract: |
-  In this section, we install the code and servers need to run the Common Tools runtime locally.
+  In this section, we install the code and servers needed to run the Common Tools runtime locally.
 ---
 ## Install Common Tools
 
-Getting the basic Common Tools runtime up and running locally consists of 3 steps
+Getting the basic Common Tools runtime up and running locally consists of 4 steps
 1. Install Deno
 1. Get the code
 1. Configure any AI or extra services you want to run locally
@@ -66,7 +66,7 @@ nix-shell -p deno
 :::
 :::{tab-item} Windows
 :sync: tab3
-You really expected us have docs for programming on Windows? 😂
+You really expected us to have docs for programming on Windows? 😂
 
 [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) might be a good option.
 ::::
@@ -88,7 +88,7 @@ $ export API_URL="http://localhost:8000"
 ```
 
 If you plan to run LLM calls, you will need to give Toolshed your API keys for the LLM services.
-See `./packages/toolshed/env.ts` for a list of LLMs supported and their associated environment variable.
+See `./packages/toolshed/env.ts` for a list of LLMs supported and their associated environment variables.
 The current default LLM is Claude, therefore setting the Anthropic key is really the only
 requirement.
 ```
@@ -96,7 +96,7 @@ $ export CTTS_AI_LLM_ANTHROPIC_API_KEY=<INSERT_YOUR_ANTHROPIC_KEY>
 ```
 
 ## Run the servers
-You'll need to run two servers (at the same time). The first one is the backend server, Toolshed. The following command will run toolshed on its default port 8000. Note: the previous exported environment variables are important only for Toolshed. So make sure they are set in this shell instance.
+You'll need to run two servers (at the same time). The first one is the backend server, Toolshed. The following command will run Toolshed on its default port 8000. Note: the previous exported environment variables are important only for Toolshed. So make sure they are set in this shell instance.
 ```
 $ cd ./packages/toolshed
 $ deno task dev
