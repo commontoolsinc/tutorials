@@ -200,3 +200,6 @@ You should see something like the following once you click on the Roll button:
 :language: typescript
 ```
 :::
+
+So far, we've been using `Cell` to store primitive data types. 
+In the next section, we'll move on to objects and arrays.
