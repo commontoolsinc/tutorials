@@ -10,22 +10,6 @@ keywords: commontools, state, Cell, database
 abstract: |
   In this section, we discover how state is handled in the runtime, how persistence is related, and discuss common patterns to use.
 ---
-
-# WIP
-This is work in progress.
-Idea is to introduce state tracking which is done by Cells.
-We'll use the open source SRD 5e character sheet as a vehicle to teach all these concept since a character sheet is all about state, derived stats and displaying information.
-See [SRD 5.1](https://www.dndbeyond.com/srd).
-
-## TODO
-* DONE Explain what Cells are.
-* DONE How to create a cell via cell() - skip other methods for now
-* DONE How set set a value
-* DONE How to display a value
-* DONE How to derive a value (simple direct derive)
-* How to derive from two state inputs
-* How to read a value
-
 ## State and Cells
 
 You'll be learning how to handle state within the Common Tools runtime.
@@ -125,7 +109,11 @@ If all we want to do is display the derived calculation, we can simply put it be
   ...
 ```
 
-Armor Class is `10 + Dexterity modifier`. We *could* do that same thing
+It should look a bit like this:
+![](./images/state_dex_mod.png)
+
+Let's now calculate Armor Class.
+It's defined as `10 + Dexterity modifier`. We *could* do that same thing
 and just display it inline, however, this gets complicted to read
 after a while. Instead we'll introduce `lift()` which lets you
 create a reactive state based on inputs such as cells.
@@ -216,7 +204,11 @@ export default recipe("state test", () => {
 });
 ```
 
-We've demonstrated state-related concepts:
+It should render something similar to this:
+![](./images/state_ac.png)
+**Figure:** Display derived `ac` for Armor Class
+
+We've demonstrated the following state-related concepts:
 * How to create a simple `Cell`
 * Set its value
 * Display the cell in `[UI]`
