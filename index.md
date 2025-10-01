@@ -18,7 +18,7 @@ It is still a work in progress.
 - **{doc}`install-ct`** - Get the runtime up and running
 - **{doc}`llm-builtin`** - A quick tour
 - **{doc}`state`** - Managing application state
-- **{doc}`state_advanced`** - How to modify state with user input 
+- **{doc}`state_modify`** - How to modify state with user input 
 
 ## TODO items
 * more complex state types

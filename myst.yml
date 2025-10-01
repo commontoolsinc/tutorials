@@ -13,7 +13,7 @@ project:
     - file: install-ct.md
     - file: llm-builtin.md
     - file: state.md
-    - file: state_advanced.md
+    - file: state_modify.md
     - file: cts.md    
 
 site:
