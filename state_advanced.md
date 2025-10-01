@@ -13,15 +13,6 @@ abstract: |
 ---
 # Modifying State
 
-## TODO
-* Modify existing state
-  * user input button rolling dice
-  * DONE text input changing name
-* more complex state types (object)
-  * make stats an objects
-* How to derive from two state inputs
-* How to read a value
-
 ## Introduction
 
 In the last section, we learned how to create state via `Cell`s and also
@@ -35,11 +26,11 @@ Let's start with changing our character's name.
 We'll need to add a text input field in the `[UI]` section.
 We can't just use regular HTML components.
 The Common Tools runtime has its own JSX components to
-to make sure data is protected and not accessed by
+make sure data is protected and not accessed by
 other scripts.
 
 ```{code-block} typescript
-:label: state_ac_lift
+:label: state_send_message_placeholder
 :linenos: false
 :emphasize-lines: 
     <common-send-message
@@ -135,7 +126,7 @@ If you deploy this code, you should see something like:
 ```
 :::
 
-Et voilà ! We've fully implemented modifying state though user input.
+Et voilà ! We've fully implemented modifying state through user input.
 
 :::{admonition} Important!
 Notice that if you reload the page, or even load the same URL on a different
@@ -151,4 +142,61 @@ We carefully construct the `cause` so that it remains the same
 each time a recipe is run, but also unique from other cells created.
 This leads to automatic persistence when using the Common Tools
 runtime.
+:::
+
+## Adding Buttons
+
+We'll create a button to roll "dice" for the character's Dexterity
+value. This will update the existing value.
+
+First let's create the handler for the click event. We
+don't need details on the event itself, so we mark it as `unknown`.
+
+```{code-block} typescript
+:label: state_rollDex_handler
+:linenos: false
+:emphasize-lines:
+const rollD6 = () => Math.floor(Math.random() * 6) + 1;
+
+const rollDex = handler<
+  unknown,
+  Cell<number>
+>(
+  (_, dex) => {
+    // Roll 3d6 for new DEX value
+    const roll = rollD6() + rollD6() + rollD6();
+    dex.set(roll);
+  }
+);
+```
+
+This handler simulates rolling three six-sided dice (3d6) and sets the DEX value to the result.
+
+Next, we'll add a button beside DEX in the UI and attach our handler:
+
+```{code-block} typescript
+:label: state_button_with_handler
+:linenos: false
+:emphasize-lines:
+<li>
+  DEX: {dex}
+  {" "}
+  <ct-button onClick={rollDex(dex)}>
+    Roll
+  </ct-button>
+</li>
+```
+Note the `{" "}` between the DEX value and button - this adds just a little padding before the button.
+
+When we click on the button, the elements that depend on the value of that cell are also updated. This means the DEX, DEX Modifier, and AC values are all updated.
+ 
+You should see something like the following once you click on the Roll button:
+![](./images/state_dex_button.png)
+
+:::{dropdown} View complete code
+:animate: fade-in
+
+```{literalinclude} ./code/state_03.tsx
+:language: typescript
+```
 :::

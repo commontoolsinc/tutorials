@@ -26,9 +26,9 @@ const rollD6 = () => Math.floor(Math.random() * 6) + 1;
 
 const rollDex = handler<
   unknown,
-  { dex: Cell<number> }
+  Cell<number>
 >(
-  (_, { dex }) => {
+  (_, dex) => {
     // Roll 3d6 for new DEX value
     const roll = rollD6() + rollD6() + rollD6();
     dex.set(roll);
@@ -53,7 +53,7 @@ export default recipe("state test", () => {
         <li>
           DEX: {dex}
           {" "}
-          <ct-button onClick={rollDex({ dex })}>
+          <ct-button onClick={rollDex(dex)}>
             Roll
           </ct-button>
         </li>
