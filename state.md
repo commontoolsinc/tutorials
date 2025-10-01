@@ -14,14 +14,15 @@ abstract: |
 # WIP
 This is work in progress.
 Idea is to introduce state tracking which is done by Cells.
-We'll use the open source SRD 5e character sheet as a vehicle to teach all these concept since a character sheet is all about state, derived stats and displaying information. See [OGL](https://www.dndbeyond.com/srd)
+We'll use the open source SRD 5e character sheet as a vehicle to teach all these concept since a character sheet is all about state, derived stats and displaying information.
+See [SRD 5.1](https://www.dndbeyond.com/srd).
 
-TODO
+## TODO
 * DONE Explain what Cells are.
 * DONE How to create a cell via cell() - skip other methods for now
 * DONE How set set a value
 * DONE How to display a value
-* How to derive a value (simple direct derive)
+* DONE How to derive a value (simple direct derive)
 * How to derive from two state inputs
 * How to read a value
 
@@ -52,7 +53,7 @@ export default recipe("state test", () => {
 ```
 
 Let's not judge the author's choice of names.
-We can now display the cell within the [UI] section of the recipe:
+We can now display the cell within the `[UI]` section of the recipe:
 ```{code-block} typescript
 /// <cts-enable />
 import {
@@ -82,8 +83,149 @@ It'll look a bit like this:
 ![](./images/state_charname.png)
 **Figure**: Character Name set
 
+## Deriving from Cells
+
+We often have computed states which are derived from stored states.
+To make this concrete with our character sheet that we are creating,
+we have the AC (Armor Class) that is based on the player's
+Dexterity. Let's see how to model this using the Common Tool's runtime.
+
+First, let's create the Dexterity attribute. Not surprisingly, we'll use a `Cell` to store this data. We'll also display it in the `[UI]` section.
+
+```{code-block} typescript
+:label: state_display_dex
+:linenos: true
+:emphasize-lines: 2,3,8
+:caption: Displaying DEX
+  const characterName = cell<string>("");
+  const dex = cell<number>(16);
+  ...
+    [UI]: (
+      <div>
+        <h2>Character name: {characterName}</h2>
+        <li>DEX: {dex}</li>
+      </div>
+  ...
+```
+The highlighted lines are the ones we added. It should be pretty self-explanatory. We create the dex cell to store Dexterity and we display on line 8.
+
+If all we want to do is display the derived calculation, we can simply put it between the `{}` symbols. Let's display our dexterity modifier. We'll use this later to calculate our Armor Class.
+
+```{code-block} typescript
+:label: state_display_dex_modifier
+:linenos: true
+:emphasize-lines: 5
+:caption: Displaying DEX Modifier
+    [UI]: (
+      <div>
+        <h2>Character name: {characterName}</h2>
+        <li>DEX: {dex}</li>
+        <li>DEX Modifier: {Math.floor((dex - 10) / 2)}</li>
+      </div>
+  ...
+```
+
+Armor Class is `10 + Dexterity modifier`. We *could* do that same thing
+and just display it inline, however, this gets complicted to read
+after a while. Instead we'll introduce `lift()` which lets you
+create a reactive state based on inputs such as cells.
+
+## Lift
+
+A lift takes a regular function and allows it to be used to
+reactive nodes. For example, here's a regular TypeScript function to
+calculate armor class:
+```{code-block} typescript
+:label: state_ac
+:linenos: false
+:emphasize-lines: 
+  const calcAC = (dex: number) : number =>
+    10 + Math.floor((dex - 10) / 2);
+```
+
+We can't just pass our `dex` variable into this function since `dex` isn't a regular `number` (it's a `Cell`). This is the magic of `lift`. It takes in the regular function and returns you a new function that can take in matching reactive components as parameters.
+
+We create the lifted function with the following code:
+```{code-block} typescript
+:label: state_ac_lift
+:linenos: false
+:emphasize-lines: 
+  const ac = lift(calcAC)(dex);
+```
+You can now use the reference to the lift `ac` just like you'd use any cell reference.
+
+:::{admonition} Advanced note
+`lift` returns a function that matches the passed in function's
+argument list but accepts reactive component version of each paramter instead.
+
+In our code above, we immediately call this function with the parameter `dex`.
+The return value is a reactive component this will be updated anytime
+the input is updated (in our case, the `dex Cell`).
+
+You can instead defer calling this `lift`'d function or even call it repeatedly. Each new call will result in a new reactive component that is tracked independently of the others.
+:::
+
+Here, we add it to the `[UI]` on line 5:
+```{code-block} typescript
+:label: state_ac_lift_display
+:linenos: true
+:emphasize-lines: 5
+      <div>
+        <h2>Character name: {characterName}</h2>
+        <li>DEX: {dex}</li>
+        <li>DEX Modifier: {Math.floor((dex - 10) / 2)}</li>
+        <li>AC: {ac}</li>
+      </div>
+```
+
+Note: you must import `lift` and `derive`. You'll need `derive` because of some behind-the-scenes code manipulation (See {doc}`cts` for more information).
+
+Here's what the full Recipe looks like:
+```{code-block} typescript
+:label: state_code_full
+:linenos: true
+:emphasize-lines: 7,8,14,15,16,17,23,24
+:caption: Full State Code
+/// <cts-enable />
+import {
+  cell,
+  h,
+  recipe,
+  UI,
+  lift,
+  derive,
+} from "commontools";
+
+export default recipe("state test", () => {
+  const characterName = cell<string>("");
+  characterName.set("Lady Ellyxir");
+  const dex = cell<number>(16);
+  const calcAC = (dex: number) : number =>
+    10 + Math.floor((dex - 10) / 2);
+  const ac = lift(calcAC)(dex);
+  return {
+    [UI]: (
+      <div>
+        <h2>Character name: {characterName}</h2>
+        <li>DEX: {dex}</li>
+        <li>DEX Modifier: {Math.floor((dex - 10) / 2)}</li>
+        <li>AC: {ac}</li>
+      </div>
+    ),
+  };
+});
+```
+
+We've demonstrated state-related concepts:
+* How to create a simple `Cell`
+* Set its value
+* Display the cell in `[UI]`
+* Create UI that calculates a derived value (DEX Modifier)
+* Create a lifted function from regular typescript
+* Use the lifted function as a reactive component in `[UI]`
+
 ## Credits
-We used the opensource SRD 5.1 for character sheet information.
+We used the Open Source SRD 5.1 for character sheet information.
 See [SRD 5.1](https://www.dndbeyond.com/srd).
 It is licensed under
 Creative Commons Attribution 4.0 International (“CC-BY-4.0”)

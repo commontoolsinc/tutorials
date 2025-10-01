@@ -12,7 +12,8 @@ project:
     - file: install-ct.md
     - file: llm-builtin.md
     - file: state.md
-    
+    - file: cts.md    
+
 site:
   template: book-theme
   parts:

@@ -145,9 +145,9 @@ After deploying your charm, you should see something like this:
 
 The next step is the real pay-off. We'll finally call the LLM. We'll add the built-in call right after the userMessage definition in the recipe. The actual location doesn't matter as long as it's in the `recipe`'s body.
 ```{code-block} typescript
-:lable: llm_builtin
+:label: llm_builtin
 :linenos: true
-:elphasize-lines:
+:emphasize-lines:
 :caption: Adding the LLM built-in call
 export default recipe("LLM Test", () => {
   const userMessage = cell<string>(undefined);
@@ -192,9 +192,9 @@ This is handled for us by the reactive system we just talked about. Specifically
 
 We'll add a new section to the recipe [UI] to display the current value of the `llmResponse`. Luckily, this is very straightforward:
 ```{code-block} html
-:lable: llm_response
+:label: llm_response
 :linenos: true
-:elphasize-lines:
+:emphasize-lines:
 :caption: Display llmResponse
     <div>
       llmResponse:
@@ -240,9 +240,9 @@ There's a lot more to discover with the llm() function call (such as sending a l
 
 
 ```{code-block} typescript
-:lable: llm_full_code
+:label: llm_full_code
 :linenos: true
-:elphasize-lines:
+:emphasize-lines:
 :caption: Full Code
 /// <cts-enable />
 import {
