@@ -12,14 +12,14 @@ abstract: |
 ---
 ## State and Cells
 
-You'll be learning how to handle state within the Common Tools runtime.
+We'll be learning how to handle state within the Common Tools runtime.
 The most direct way to store state is via `Cells`.
-Cells store and access data. You can set data in a cell via the set() function. You can also retrieve data via the get() function, we'll demonstrate that in a later section.
+Cells store and access data. We can set data in a cell via the set() function. We can also retrieve data via the get() function, we'll demonstrate that in a later section.
 There are many ways to create cells and we'll get to all of them, but for now, we'll start with the `cell<T>()` function available in Recipes.
-You've already used this in {ref}`calling_llm`
+We've already used this in {ref}`calling_llm`
 
 Creating a cell is quite easy! Let's create the beginnings of a
-character sheet, one you might use playing a table top role playing game. Don't worry if you don't get the reference, it should be easy to follow.
+character sheet, one we might use playing a table top role playing game. Don't worry if you don't get the reference, it should be easy to follow.
 
 ```{code-block} typescript
 export default recipe("state test", () => {
@@ -61,7 +61,7 @@ export default recipe("state test", () => {
 ```
 The `{characterName}` snippet creates a reactive node behind the scenes. This means the rendered character name is updated whenever the cell changes.
 
-You can now deploy the code. See the section {ref}`deploy_charms` for how to do this.
+We can now deploy the code. See the section {ref}`deploy_charms` for how to do this.
 
 It'll look a bit like this:
 ![](./images/state_charname.png)
@@ -72,7 +72,7 @@ It'll look a bit like this:
 We often have computed states which are derived from existing states.
 
 A concrete example of derived state is AC (Armor Class).
-It's value is affected by another state value, Dexterity.
+Its value is affected by another state value, Dexterity.
 We'll build out this example.
 
 First, let's create the Dexterity attribute. Not surprisingly, we'll use a `Cell` to store this data. We'll also display it in the `[UI]` section.
@@ -132,7 +132,7 @@ calculate armor class:
     10 + Math.floor((dex - 10) / 2);
 ```
 
-We can't just pass our `dex` variable into this function since `dex` isn't a regular `number` (it's a `Cell`). This is the magic of `lift`. It takes in the regular function and returns you a new function that can take in matching reactive components as parameters.
+We can't just pass our `dex` variable into this function since `dex` isn't a regular `number` (it's a `Cell`). This is the magic of `lift`. It takes in the regular function and returns a new function that can take in matching reactive components as parameters.
 
 We create the lifted function with the following code:
 ```{code-block} typescript
@@ -141,7 +141,7 @@ We create the lifted function with the following code:
 :emphasize-lines: 
   const ac = lift(calcAC)(dex);
 ```
-You can now use the reference to the lift `ac` just like you'd use any cell reference.
+We can now use the reference to the lift `ac` just like we'd use any cell reference.
 
 :::{admonition} Advanced note
 `lift` returns a function that matches the passed in function's
@@ -151,7 +151,7 @@ In our code above, we immediately call this function with the parameter `dex`.
 The return value is a reactive component this will be updated anytime
 the input is updated (in our case, the `dex Cell`).
 
-You can instead defer calling this `lift`'d function or even call it repeatedly. Each new call will result in a new reactive component that is tracked independently of the others.
+We can instead defer calling this `lift`'d function or even call it repeatedly. Each new call will result in a new reactive component that is tracked independently of the others.
 :::
 
 Here, we add it to the `[UI]` on line 5:
@@ -167,7 +167,7 @@ Here, we add it to the `[UI]` on line 5:
       </div>
 ```
 
-Note: you must import `lift` and `derive`. You'll need `derive` because of some behind-the-scenes code transformation, but you will not be using it directly in this section. (See {doc}`cts` for more information).
+Note: we must import `lift` and `derive`. We'll need `derive` because of some behind-the-scenes code transformation, but we will not be using it directly in this section. (See {doc}`cts` for more information).
 
 Here's what the full Recipe looks like:
 ```{code-block} typescript
