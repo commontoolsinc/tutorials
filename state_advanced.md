@@ -22,13 +22,16 @@ abstract: |
 * How to derive from two state inputs
 * How to read a value
 
-In the last section, we learned how to create state via cells and also
-how to create derived states. Our example was using
-a SRD 5e character sheet.
-Now we are going to learn how to modify state once we've set
-its initial value.
+## Introduction
 
-Let's start with changing the character's name.
+In the last section, we learned how to create state via `Cell`s and also
+how to create derived states.
+We used building a fantasy game character sheet as an example.
+We'll continue with that to learn how to modify state.
+
+## Handling User Input
+
+Let's start with changing our character's name.
 We'll need to add a text input field in the `[UI]` section.
 We can't just use regular HTML components.
 The Common Tools runtime has its own JSX components to
@@ -57,6 +60,8 @@ suggests, handles events.
 The JSX event listener (such as `onmessagesend` in our code) will call
 our handler to handle the event emitted by the JSX component.
 
+## Understanding Handlers
+
 Handlers in Common Tools have a specific signature:
 
 ```{code-block} typescript
@@ -81,6 +86,8 @@ where `message` contains the text the user entered.
 The handler will also take in the
 `characterName` cell. It will simply set the cell with the new name
 from the event.
+
+### Creating the Handler
 
 ```{code-block} typescript
 :label: state_handler_updatename
@@ -125,3 +132,18 @@ If you deploy this code, you should see something like:
 :language: typescript
 ```
 :::
+
+Et voilà ! We've fully implemented modifying state though user input.
+
+:::{admonition} Important!
+Notice that if you reload the page, or even load the same URL on a different
+browser, you'll see the saved data for your character's name.
+This is because cells are persistent by default.
+:::
+
+:::{admonition} Advanced note
+Each cell is created with a `cause`, this uniquely identifies.
+We carefully construct this `cause` so that it remains the same
+each time a recipe is run, but also unique from other cells created.
+:::
+
