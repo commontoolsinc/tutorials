@@ -134,7 +134,7 @@ calculate armor class:
 
 We can't just pass our `dex` variable into this function since `dex` isn't a regular `number` (it's a `Cell`). This is the magic of `lift`. It takes in the regular function and returns a new function that can take in matching reactive components as parameters.
 
-We create the lifted function with the following code:
+We create the lifted function with the following code in the recipe body:
 ```{code-block} typescript
 :label: state_ac_lift
 :linenos: false
