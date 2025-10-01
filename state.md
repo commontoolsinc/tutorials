@@ -10,135 +10,81 @@ keywords: commontools, state, Cell, database
 abstract: |
   In this section, we discover how state is handled in the runtime, how persistence is related, and discuss common patterns to use.
 ---
-## Handling State
 
-In this chapter, we'll build out lunch voting charm.
-It's multi-user, meaning you can hand out the URL to multiple people and each user will be able to interact with the charm. This will be a good example to see how state is handled and what parts are stored in the database.
+# WIP
+This is work in progress.
+Idea is to introduce state tracking which is done by Cells.
+We'll use the open source SRD 5e character sheet as a vehicle to teach all these concept since a character sheet is all about state, derived stats and displaying information. See [OGL](https://www.dndbeyond.com/srd)
 
-Let's spend a little time discussing what this charm should do and how it relates to statefullness.
+TODO
+* DONE Explain what Cells are.
+* DONE How to create a cell via cell() - skip other methods for now
+* DONE How set set a value
+* DONE How to display a value
+* How to derive a value (simple direct derive)
+* How to derive from two state inputs
+* How to read a value
 
-### List of Destinations
-Users can create a list of lunch destinations. Destinations will be a simple string for now.
-Users can add, edit, and remove destinations at any time.
-This list will be stateful and persisted, meaning that all users will see the same list and changes happen in real-time on all users viewing the screen.
-Returning to the charm later will show the same list (assuming no one has changed in it in the meantime!)
+## State and Cells
 
-### Vote
-Users can cast a yes, maybe, or no vote for each destination.
-A vote is in the form of a tuple {date, destination, user, yes|no|maybe}
+You'll be learning how to handle state within the Common Tools runtime.
+The most direct way to store state is via `Cells`.
+Cells store and access data, they do this via their set() and get() methods.  
+There are many ways to create cells and we'll get to all of them, but for now, we'll start with the `cell<T>()` function available in Recipes.
+You've already used this in {ref}`calling_llm`
 
-The current user voting is a just a text input field. This tells the system who is voting. For version 1, this means that the current user is the same for everyone interacting with the charm at the same time, since it's stored in a single state variable. We'll learn about other patterns that let us work around this in the future chapters. 
+Creating a cell is quite easy!
+```{code-block} typescript
+export default recipe("state test", () => {
+  const characterName = cell<string>("");
+}
+```
+Here, we have created a cell with a type argument of `string`,
+and its intial value is the empty string.
 
-A User can have up to one vote per destination. The system checks the current date to see if the
-day has changed and the user can revote.
-
-Votes are persisted just like destinations.
-
-### Summary
-The system summarizes the current state for today.
-It looks at all the destinations, and for each one it shows the list of users and their corresponding vote.
-The list is sorted by descending Score (`Yes - No + 0.5 * Maybe`).
-The summary is stateful, meaning that any changes in votes automatically updates everyone's Summary display.
-
-:::{table} Table caption
-:label: table
-:align: center
-| Destination  | Score | Yes | Maybe | No |
-| :--- | :--- | :--- | :--- | :--- |
-| Cheeseboard  | 3 | 3 - Alex, Gideon, Jake | 2 - Ben, Tony | 1 - Robin |
-| Fava         | 2.5 | 1 - Berni | 4 - Alex, Gideon, Jake, Ellyse, Ben | 1 - Robin |
-| Saul's       | 2 | 2 - Alex, Ben | 2 Berni, Gideon | 1 - Robin |
-:::
-
-With this, we should have enough information to start writing the charm.
-
-## Skeleton Recipe
-
-We often start with a very basic, and I mean *basic* recipe.
-We saw this already in {ref}`skeleton_recipe` section of a previous chapter.
-We'll shameless copy the same recipe. If you are following along, enter the code
-from {ref}`state_recipe1`.
+Let's now set `characterName` to something a bit more interesting.
 
 ```{code-block} typescript
-:label: state_recipe1
-:linenos: true
-:caption: Skeleton Recipe
+export default recipe("state test", () => {
+  const characterName = cell<string>("");
+  characterName.set("Lady Ellyxir");
+}
+```
+
+Let's not judge the author's choice of names.
+We can now display the cell within the [UI] section of the recipe:
+```{code-block} typescript
 /// <cts-enable />
 import {
-  BuiltInLLMContent,
-  Cell,
   cell,
-  Default,
-  derive,
   h,
-  handler,
-  ifElse,
-  llm,
-  NAME,
   recipe,
   UI,
 } from "commontools";
 
-export default recipe("Basic Recipe", () => {
+export default recipe("state test", () => {
+  const characterName = cell<string>("");
+  characterName.set("Lady Ellyxir");
   return {
-    [NAME]: "Basic Recipe",
     [UI]: (
       <div>
-        <h2>Hello, World!</h2>
+        <h2>Character name: {characterName}</h2>
       </div>
     ),
   };
 });
 ```
+The `{characterName}` snippet creates a reactive node behind the scenes. This means the rendered character name is updated whenever the cell changes.
 
 You can now deploy the code. See the section {ref}`deploy_charms` for how to do this.
 
-## Types!
-Type Driven Development, let's figure out what types we'll need.
-* Destinations is an array of strings.
-* Users is an array of strings.
-* Vote is an object with date, destination, user, yes|no|maybe
-* Current user is just a string (an element in the Users array)
+It'll look a bit like this:
+![](./images/state_charname.png)
+**Figure**: Character Name set
 
-The typescript implementation is in {ref}`state_types`.
-
-```{code-block} typescript
-:label: state_types
-:linenos: true
-:caption: Lunch Voting Types
-type Destinations = string[];
-type Users = string[];
-type VoteChoice = "yes" | "no" | "maybe";
-interface Vote {
-  date: string;
-  destination: string;
-  user: string;
-  choice: VoteChoice;
-}
-```
-
-## Destinations
-
-We'll now create the list of destinations. First, let's set up a `Cell`. A `Cell` stores state. It has get() and set() functions. We'll create our `Cell` using the `cell()` function. This is already in our import list. We'll also add this to the [UI] section of the recipe too, so we can see the contents.
-
-```{code-block} typescript
-:label: state_destinations
-:linenos: true
-:caption: Destinations List
-const destinations = cell<Destinations>([]);
-
-  /// code
-
-    [UI]: (
-      <div>
-        <h2>Hello, World!</h2>
-        <div>
-          {destinations.map((d) => (
-            <li>destinations: {destinations}</li>
-          ))}
-        </div>
-      </div>
-    ),
-```
-
+## Credits
+We used the opensource SRD 5.1 for character sheet information.
+See [SRD 5.1](https://www.dndbeyond.com/srd).
+It is licensed under
+Creative Commons Attribution 4.0 International (“CC-BY-4.0”)
 

@@ -140,6 +140,7 @@ After deploying your charm, you should see something like this:
 ![](./images/llm_handler.png)
 **Figure**: Recipe with Handler
 
+(calling_llm)=
 ## Calling the LLM!
 
 The next step is the real pay-off. We'll finally call the LLM. We'll add the built-in call right after the userMessage definition in the recipe. The actual location doesn't matter as long as it's in the `recipe`'s body.
