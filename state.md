@@ -143,7 +143,9 @@ We create the lifted function with the following code:
 ```
 We can now use the reference to the lift `ac` just like we'd use any cell reference.
 
-:::{admonition} Advanced note
+:::{dropdown} Detailed explanation
+:animate: fade-in
+
 `lift` returns a function that matches the passed in function's
 argument list but accepts reactive component versions of each parameter instead.
 

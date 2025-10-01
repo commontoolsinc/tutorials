@@ -76,7 +76,9 @@ The `handler` function takes:
   - `event` (matches EventType) as its first parameter
   - `args` (matches ArgsType) as its second parameter
 
-:::{admonition} Advanced note
+:::{dropdown} Detailed explanation
+:animate: fade-in
+
 The `handler` function returns a factory that you call with your actual arguments to create the event handler. This factory pattern allows the handler to bind specific values from your recipe while still receiving events from the UI components.
 :::
 
@@ -141,9 +143,12 @@ browser, you'll see the saved data for your character's name.
 This is because cells are persistent by default.
 :::
 
-:::{admonition} Advanced note
-Each cell is created with a `cause`, this uniquely identifies.
-We carefully construct this `cause` so that it remains the same
-each time a recipe is run, but also unique from other cells created.
-:::
+:::{dropdown} Detailed explanation
+:animate: fade-in
 
+Each cell is created with a `cause` that uniquely identifies it.
+We carefully construct the `cause` so that it remains the same
+each time a recipe is run, but also unique from other cells created.
+This leads to automatic persistence when using the Common Tools
+runtime.
+:::

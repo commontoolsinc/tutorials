@@ -207,7 +207,9 @@ The result can be either a direct string or an array of parts. We call JSON.stri
 this just makes it easier to do a bunch of work to display it. It won't be pretty, but you'll get
 content you're looking for.
 
-:::{admonition} Advanced note
+:::{dropdown} Detailed explanation
+:animate: fade-in
+
 The AST Transformer (enabled via `/// <cts-enable />`) rewrites that ternary expression into `{ifElse(llmResponse.result, derive(llmResponse.result, _v1 => JSON.stringify(_v1)), "")}`. You'll still need to import `ifElse` (even though you never call it yourself) alongside the existing `derive` import for the generated code to type-check.
 :::
 
