@@ -1,6 +1,6 @@
 ---
 title: Installing Common Tools
-short_title: Install CT
+short_title: Installing Common Tools
 description: How to install the Common Tools runtime
 subject: Tutorial
 subtitle: How to install the Common Tools runtime
