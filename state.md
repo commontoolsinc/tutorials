@@ -18,7 +18,9 @@ Cells store and access data. You can set data in a cell via the set() function. 
 There are many ways to create cells and we'll get to all of them, but for now, we'll start with the `cell<T>()` function available in Recipes.
 You've already used this in {ref}`calling_llm`
 
-Creating a cell is quite easy!
+Creating a cell is quite easy! Let's create the beginnings of a
+character sheet, one you might use playing a table top role playing game. Don't worry if you don't get the reference, it should be easy to follow.
+
 ```{code-block} typescript
 export default recipe("state test", () => {
   const characterName = cell<string>("");
@@ -67,10 +69,11 @@ It'll look a bit like this:
 
 ## Deriving from Cells
 
-We often have computed states which are derived from stored states.
-To make this concrete with our character sheet that we are creating,
-we have the AC (Armor Class) that is based on the player's
-Dexterity. Let's see how to model this using the Common Tool's runtime.
+We often have computed states which are derived from existing states.
+
+A concrete example of derived state is AC (Armor Class).
+It's value is affected by another state value, Dexterity.
+We'll build out this example.
 
 First, let's create the Dexterity attribute. Not surprisingly, we'll use a `Cell` to store this data. We'll also display it in the `[UI]` section.
 
