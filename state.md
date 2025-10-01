@@ -14,7 +14,7 @@ abstract: |
 
 You'll be learning how to handle state within the Common Tools runtime.
 The most direct way to store state is via `Cells`.
-Cells store and access data, they do this via their set() and get() methods.  
+Cells store and access data. You can set data in a cell via the set() function. You can also retrieve data via the get() function, we'll demonstrate that in a later section.
 There are many ways to create cells and we'll get to all of them, but for now, we'll start with the `cell<T>()` function available in Recipes.
 You've already used this in {ref}`calling_llm`
 
@@ -25,7 +25,7 @@ export default recipe("state test", () => {
 }
 ```
 Here, we have created a cell with a type argument of `string`,
-and its intial value is the empty string.
+and its initial value is the empty string.
 
 Let's now set `characterName` to something a bit more interesting.
 
@@ -35,8 +35,6 @@ export default recipe("state test", () => {
   characterName.set("Lady Ellyxir");
 }
 ```
-
-Let's not judge the author's choice of names.
 We can now display the cell within the `[UI]` section of the recipe:
 ```{code-block} typescript
 /// <cts-enable />
@@ -114,13 +112,13 @@ It should look a bit like this:
 
 Let's now calculate Armor Class.
 It's defined as `10 + Dexterity modifier`. We *could* do that same thing
-and just display it inline, however, this gets complicted to read
+and just display it inline, however, this gets complicated to read
 after a while. Instead we'll introduce `lift()` which lets you
 create a reactive state based on inputs such as cells.
 
 ## Lift
 
-A lift takes a regular function and allows it to be used to
+A lift takes a regular function and allows it to be used with
 reactive nodes. For example, here's a regular TypeScript function to
 calculate armor class:
 ```{code-block} typescript
@@ -144,7 +142,7 @@ You can now use the reference to the lift `ac` just like you'd use any cell refe
 
 :::{admonition} Advanced note
 `lift` returns a function that matches the passed in function's
-argument list but accepts reactive component version of each paramter instead.
+argument list but accepts reactive component versions of each parameter instead.
 
 In our code above, we immediately call this function with the parameter `dex`.
 The return value is a reactive component this will be updated anytime
@@ -166,7 +164,7 @@ Here, we add it to the `[UI]` on line 5:
       </div>
 ```
 
-Note: you must import `lift` and `derive`. You'll need `derive` because of some behind-the-scenes code manipulation (See {doc}`cts` for more information).
+Note: you must import `lift` and `derive`. You'll need `derive` because of some behind-the-scenes code transformation, but you will not be using it directly in this section. (See {doc}`cts` for more information).
 
 Here's what the full Recipe looks like:
 ```{code-block} typescript
@@ -213,7 +211,7 @@ We've demonstrated the following state-related concepts:
 * Set its value
 * Display the cell in `[UI]`
 * Create UI that calculates a derived value (DEX Modifier)
-* Create a lifted function from regular typescript
+* Create a lifted function from regular TypeScript
 * Use the lifted function as a reactive component in `[UI]`
 
 ## Credits
