@@ -214,7 +214,10 @@ We've demonstrated the following state-related concepts:
 * Create a lifted function from regular TypeScript
 * Use the lifted function as a reactive component in `[UI]`
 
-## Credits
+In the next section, we will learn how user input can
+modify state.
+
+### Credits
 We used the Open Source SRD 5.1 for character sheet information.
 See [SRD 5.1](https://www.dndbeyond.com/srd).
 It is licensed under
