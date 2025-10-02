@@ -8,8 +8,9 @@ authors:
     email: ben@common.tools
 keywords: commontools, UI
 abstract: |
-Common UI is a collection of web components (prefixed with ct-) exposed for building patterns.
+  Common UI is a collection of web components (prefixed with ct-) exposed for building patterns.
 ---
+# Common UI
 
 - layout components: `ct-autolayout`, `ct-screen`, `ct-vstack`, `ct-hstack`, `ct-vscroll`, `ct-toolbar`, `ct-grid` (stale)
 	- gap: `ct-zstack` for layered rendering
