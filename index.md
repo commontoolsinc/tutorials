@@ -1,9 +1,6 @@
 ---
 title: Guide to the Common Tools Runtime
 subject: Tutorial
-authors:
-  - name: Ellyse Cedeno
-    email: ellyse@common.tools
 keywords: commontools
 ---
 
@@ -38,3 +35,4 @@ It is still a work in progress.
   * navigateTo
   * compileAndRun
   * llmDialog
+* sorting shopping list (filter by key such as aisle)
