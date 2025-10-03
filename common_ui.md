@@ -32,7 +32,7 @@ Our `ui` package is a web component library implemented in `lit` that interopera
 
 Applies a set of theme variables to the entire subtree. Not all components respect the theme yet, but many do. See `packages/ui/src/v2/components/theme-context.ts`
 
-```js
+```{code-block} typescript
 const localTheme = {
   accentColor: cell("#3b82f6"),
   fontFace: cell("system-ui, -apple-system, sans-serif"),
@@ -57,7 +57,7 @@ Can be nested and overriden further down the subtree.
 
 Used to render a `Cell` that has a `[UI]` property into the DOM. Usually not required inside a pattern, used in the app shell itself.
 
-```html
+```{code-block} html
 <ct-render $cell={myCharm} />
 ```
 
@@ -65,7 +65,7 @@ Used to render a `Cell` that has a `[UI]` property into the DOM. Usually not req
 
 Register keyboard shortcuts with a handler. These registrations are mediated by `packages/shell/src/lib/keyboard-router.ts` in the shell to prevent conflicts with system shortcuts.
 
-```html
+```{code-block} html
     <ct-keybind
         code="KeyN"
         alt
@@ -88,7 +88,7 @@ When to use: your `<main>` or `<div>` is not growing to full the available space
 :name: layout-example
 ```
 
-```html
+```{code-block} html
 <ct-screen>
   <ct-heading slot="header">
     Hello
@@ -113,7 +113,7 @@ Stack several actions into a horizontal bar, typically at the top of `<ct-screen
 :name: layout-example
 ```
 
-```html
+```{code-block} html
 <ct-screen>
   <ct-toolbar slot="header">
       <ct-button>A</ct-button>
@@ -136,7 +136,7 @@ When to use: any time you need to stack items vertically.
 :name: layout-example
 ```
 
-```html
+```{code-block} html
 <ct-vstack gap="1" align="start" justify="stretch">
     <div>A</div>
     <div>B</div>
@@ -154,7 +154,7 @@ When to use: toolbars, column layouts, grouping icons and buttons and text toget
 :name: layout-example
 ```
 
-```html
+```{code-block} html
 <ct-hstack gap="1" align="start" justify="stretch">
     <div>A</div>
     <div>B</div>
@@ -170,7 +170,7 @@ Currently missing, would allow similar control for layering items on top of one 
 
 Wrap tall vertical content in a scrollable container with control over autoscroll and scrollbar appearance. Inspired by [SwiftUI ScrollView](https://developer.apple.com/documentation/swiftui/scrollview).
 
-```html
+```{code-block} html
 <ct-vscroll height="400px">
   <ct-vstack gap="4">
     <p>Long content...</p>
@@ -180,7 +180,7 @@ Wrap tall vertical content in a scrollable container with control over autoscrol
 
 In practice we often use a specific set of properties if dealing with a "chat view" that scrolls:
 
-```html
+```{code-block} html
 <ct-vscroll flex showScrollbar fadeEdges snapToBottom />
 ```
 
@@ -202,7 +202,7 @@ Will attempt to lay out the children provided as best it can. Provides two slots
 :name: layout-example
 ```
 
-```html
+```{code-block} html
 <ct-screen>
   <!-- Header slot - fixed at top -->
   <div slot="header">
@@ -261,7 +261,7 @@ Will attempt to lay out the children provided as best it can. Provides two slots
 
 You can mix-and-match the above components to achieve practically any (standard) layout.
 
-```html
+```{code-block} html
 <ct-screen>
     <ct-toolbar slot="top">
         <ct-button>hello</ct-button>
@@ -318,14 +318,14 @@ You can mix-and-match the above components to achieve practically any (standard)
 	- redundant: common-send-message, ct-message-input (?)
 	    - this is JUST a button and an input
 		- the "right" way is:
-      - ```tsx
+      - ```{code-block} html
         <ct-form onSubmit={handler({ ... })}>
           <ct-input></ct-input>
           <ct-button type="submit">Submit</ct-button>
         </ct-form>
         ```
 
-      - ```tsx
+      - ```{code-block} typescript
         const EnterToSubmit = recipe(({ myHandler }) => {
           return {
               [UI]: <ct-form onSubmit={myHandler}>
@@ -345,7 +345,7 @@ You can mix-and-match the above components to achieve practically any (standard)
     - `const items: ListItem[]`
     - Consider using `[NAME]`?
 	- gap: re-orderable list
-      - ```tsx
+      - ```{code-block} html
         <ct-list editable reorderable onDelete={}>
             {items.map((i: Opaque<{ name: string }>) => <ct-list-item>{i.name}</ct-list-item>)}
         </ct-list>
