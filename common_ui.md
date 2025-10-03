@@ -12,7 +12,19 @@ abstract: |
 ---
 # Common UI
 
-The philosophy of Common UI is inspired by Swift UI, the 'default' configuration should 'just work' if you use the correct building blocks together. Broadly, this means components are divided into layers:
+The philosophy of Common UI is inspired by Swift UI, the 'default' configuration should 'just work' if you use the correct building blocks together.
+
+:::{note}
+Swift UI operates on a [reactive binding model](https://developer.apple.com/tutorials/swiftui-concepts/driving-changes-in-your-ui-with-state-and-bindings) with [FRP elements](https://developer.apple.com/documentation/combine), making it a short-leap from our needs (as compared with general Web UI).
+
+![](./images/managing-user-interface-state~dark@2x.png)
+
+Swift developers are encouraged to use the defaults as much as possible. By doing less specification you [maintain the dynamic ability to adapt to the user's preferences and environment]( https://developer.apple.com/tutorials/swiftui-concepts/maintaining-the-adaptable-sizes-of-built-in-views). This means you 'know less' about what you'll be drawing than you may have come to expect from an abstraction like Tailwind. The **composition** of components is emphasised over granular control.
+:::
+
+
+Our `ui` package is a web component library implemented in `lit` that interoperates with the Common Tools runtime to produce a Swift UI-like abstraction, this means our components are divided into layers:
+
 
 # System Components
 
@@ -109,6 +121,10 @@ Stack several actions into a horizontal bar, typically at the top of `<ct-screen
   </ct-toolbar>
 </ct-screen>
 ```
+
+## Stacks are all you need
+
+... almost. Just the [horizontal and vertical stacks](https://developer.apple.com/tutorials/swiftui-concepts/organizing-and-aligning-content-with-stacks) if you control the [spacing and alignment](https://developer.apple.com/tutorials/swiftui-concepts/adjusting-the-space-between-views).
 
 ## ct-vstack
 
