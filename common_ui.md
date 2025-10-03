@@ -14,7 +14,55 @@ abstract: |
 
 The philosophy of Common UI is inspired by Swift UI, the 'default' configuration should 'just work' if you use the correct building blocks together. Broadly, this means components are divided into layers:
 
-## Layout Components
+# System Components
+
+## ct-theme
+
+Applies a set of theme variables to the entire subtree. Not all components respect the theme yet, but many do. See `packages/ui/src/v2/components/theme-context.ts`
+
+```js
+const localTheme = {
+  accentColor: cell("#3b82f6"),
+  fontFace: cell("system-ui, -apple-system, sans-serif"),
+  borderRadius: cell("0.5rem"),
+};
+
+// later...
+
+return {
+  [NAME]: "Themed Charm",
+  [UI]: (
+    <ct-theme theme={localTheme}>
+      {/* all components in subtree are themed */}
+    </ct-theme>
+  )
+}
+```
+
+Can be nested and overriden further down the subtree.
+
+## ct-render
+
+Used to render a `Cell` that has a `[UI]` property into the DOM. Usually not required inside a pattern, used in the app shell itself.
+
+```html
+<ct-render $cell={myCharm} />
+```
+
+## ct-keybind (beta)
+
+Register keyboard shortcuts with a handler. These registrations are mediated by `packages/shell/src/lib/keyboard-router.ts` in the shell to prevent conflicts with system shortcuts.
+
+```html
+    <ct-keybind
+        code="KeyN"
+        alt
+        preventDefault
+        onct-keybind={createChatRecipe({ ... })}
+    />
+```
+
+# Layout Components
 
 Layout components do not provide any content themselves, they are used to arrange other components. We draw quite directly from the [Swift UI Layout Fundamentals](https://developer.apple.com/documentation/swiftui/layout-fundamentals).
 
@@ -233,10 +281,6 @@ You can mix-and-match the above components to achieve practically any (standard)
     </ct-autolayout>
 </ct-screen>
 ```
-
-# System Components
-
-- meta: `ct-theme`, `ct-render`, `ct-keybind`
 
 # Visual Components
 
